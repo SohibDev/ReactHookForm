@@ -64,7 +64,7 @@ const YouTubeForm = () => {
   return (
     <div>
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
-        <h1>YouTube Form ({renderCount / 2})</h1>
+        <h1>YouTube Form ({renderCount})</h1>
         {/* <h2>Watched value: {JSON.stringify(watch)}</h2> */}
         <label htmlFor="userName" >UserName</label>
         <input type="text" id='userName' {...register("username", {
