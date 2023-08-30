@@ -1,5 +1,6 @@
 import { useForm, useFieldArray } from "react-hook-form"
 import { DevTool } from "@hookform/devtools"
+import { useEffect } from "react";
 
 let renderCount = 0;
 
@@ -37,8 +38,17 @@ const YouTubeForm = () => {
     }
   }
   );
-  const { register, control, handleSubmit, formState } = form;
+  const { register, control, handleSubmit, formState, watch } = form;
   const { errors } = formState;
+
+  useEffect(() => {
+    const subscription = watch((value) => {
+      console.log(value);
+    })
+    return () => subscription.unsubscribe();
+  }, [watch]);
+
+  // const watchedValue = watch()
 
   const { fields, append, remove } = useFieldArray({
     name: 'phnNumbers',
@@ -55,6 +65,7 @@ const YouTubeForm = () => {
     <div>
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
         <h1>YouTube Form ({renderCount / 2})</h1>
+        {/* <h2>Watched value: {JSON.stringify(watch)}</h2> */}
         <label htmlFor="userName" >UserName</label>
         <input type="text" id='userName' {...register("username", {
           required: {
@@ -147,6 +158,7 @@ const YouTubeForm = () => {
           <label>List of phone numbers</label>
           <div>
             {fields.map((field, index) => {
+
               return (
                 <div className="form-control" key={field.id} >
                   <input type="text" {...register(`phnNumbers.${index}.number` as const)} />
