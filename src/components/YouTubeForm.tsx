@@ -38,7 +38,7 @@ const YouTubeForm = () => {
     }
   }
   );
-  const { register, control, handleSubmit, formState, watch } = form;
+  const { register, control, handleSubmit, formState, watch, getValues, setValue } = form;
   const { errors } = formState;
 
   useEffect(() => {
@@ -60,11 +60,23 @@ const YouTubeForm = () => {
 
   }
 
+  const handleGetValues = () => {
+    console.log('Get values', getValues());
+  }
+
+  const handleSetValues = () => {
+    setValue('username', '', {
+      shouldValidate: true,
+      shouldDirty: true,
+      shouldTouch: true,
+    })
+  }
+
   renderCount++
   return (
     <div>
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
-        <h1>YouTube Form ({renderCount})</h1>
+        <h1>YouTube Form ({renderCount / 2})</h1>
         {/* <h2>Watched value: {JSON.stringify(watch)}</h2> */}
         <label htmlFor="userName" >UserName</label>
         <input type="text" id='userName' {...register("username", {
@@ -116,10 +128,7 @@ const YouTubeForm = () => {
 
         <label htmlFor="twitter">Twitter</label>
         <input type="text" id='twitter' {...register('social.twitter', {
-          required: {
-            value: true,
-            message: 'Twitter is required',
-          }
+          disabled: watch('channel') == '',
         })} />
 
         <p>{errors.social?.twitter?.message}</p>
@@ -195,6 +204,9 @@ const YouTubeForm = () => {
         })} />
 
         <p>{errors.dob?.message}</p>
+
+        <button type="button" onClick={handleGetValues}>Get Values</button>
+        <button type="button" onClick={handleSetValues}>Set Values</button>
 
         <button type='submit'>Submit</button>
 
