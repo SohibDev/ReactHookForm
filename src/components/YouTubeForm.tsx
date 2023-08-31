@@ -1,4 +1,4 @@
-import { useForm, useFieldArray } from "react-hook-form"
+import { useForm, useFieldArray, FieldErrors } from "react-hook-form"
 import { DevTool } from "@hookform/devtools"
 import { useEffect } from "react";
 
@@ -39,7 +39,10 @@ const YouTubeForm = () => {
   }
   );
   const { register, control, handleSubmit, formState, watch, getValues, setValue } = form;
-  const { errors } = formState;
+  const { errors, isDirty, isValid, touchedFields, dirtyFields, isSubmitted, isSubmitting, isSubmitSuccessful, submitCount } = formState;
+
+  console.log( errors, touchedFields, dirtyFields, 'Submits', isSubmitted, isSubmitting, isSubmitSuccessful, submitCount);
+  
 
   useEffect(() => {
     const subscription = watch((value) => {
@@ -60,6 +63,11 @@ const YouTubeForm = () => {
 
   }
 
+  const onError = (errors: FieldErrors<FormValues>) => {
+    console.log('Error Form', errors );
+    
+  }
+
   const handleGetValues = () => {
     console.log('Get values', getValues());
   }
@@ -75,7 +83,7 @@ const YouTubeForm = () => {
   renderCount++
   return (
     <div>
-      <form onSubmit={handleSubmit(onSubmit)} noValidate>
+      <form onSubmit={handleSubmit(onSubmit, onError)} noValidate>
         <h1>YouTube Form ({renderCount / 2})</h1>
         {/* <h2>Watched value: {JSON.stringify(watch)}</h2> */}
         <label htmlFor="userName" >UserName</label>
@@ -208,7 +216,7 @@ const YouTubeForm = () => {
         <button type="button" onClick={handleGetValues}>Get Values</button>
         <button type="button" onClick={handleSetValues}>Set Values</button>
 
-        <button type='submit'>Submit</button>
+        <button type='submit' disabled={!isDirty || !isValid}>Submit</button>
 
       </form>
       <DevTool control={control} />
